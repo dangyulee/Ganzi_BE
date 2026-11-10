@@ -732,7 +732,7 @@ export async function searchGoogleScholar(
 ): Promise<GoogleScholarArticle[]> {
   let browser;
   try {
-    console.log(`🔍 Scraping Google Scholar for: ${query}`);
+    console.error(`🔍 Scraping Google Scholar for: ${query}`);
 
     // Add random delay to avoid rate limiting
     await randomDelay(2000, 5000);
@@ -1010,7 +1010,7 @@ export async function searchGoogleScholar(
 export async function searchMedicalDatabases(
   query: string,
 ): Promise<GoogleScholarArticle[]> {
-  console.log(`🔍 Searching medical databases for: ${query}`);
+  console.error(`🔍 Searching medical databases for: ${query}`);
 
   // Try multiple medical databases in parallel
   const searches = await Promise.allSettled([
@@ -1071,7 +1071,7 @@ async function searchCochraneLibrary(
 ): Promise<GoogleScholarArticle[]> {
   let browser;
   try {
-    console.log(`🔍 Scraping Cochrane Library for: ${query}`);
+    console.error(`🔍 Scraping Cochrane Library for: ${query}`);
 
     await randomDelay(1000, 3000);
 
@@ -1162,7 +1162,7 @@ async function searchClinicalTrials(
   query: string,
 ): Promise<GoogleScholarArticle[]> {
   try {
-    console.log(`🔍 Searching ClinicalTrials.gov for: ${query}`);
+    console.error(`🔍 Searching ClinicalTrials.gov for: ${query}`);
 
     const response = await superagent
       .get("https://clinicaltrials.gov/api/v2/studies")
@@ -1212,7 +1212,7 @@ async function searchClinicalTrials(
 export async function searchMedicalJournals(
   query: string,
 ): Promise<GoogleScholarArticle[]> {
-  console.log(`🔍 Searching medical journals for: ${query}`);
+  console.error(`🔍 Searching medical journals for: ${query}`);
 
   const journalSearches = await Promise.allSettled([
     searchJournal("NEJM", query),
@@ -1282,7 +1282,7 @@ async function fetchFullTextFromPMC(pmc_id: string): Promise<string | null> {
       }
     } catch (xmlError) {
       // Continue to next method
-      console.log(`PMC XML method failed for ${pmc_id}, trying HTML method`);
+      console.error(`PMC XML method failed for ${pmc_id}, trying HTML method`);
     }
 
     // Method 2: Scrape HTML page using puppeteer

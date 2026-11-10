@@ -1,7 +1,7 @@
 from langchain_upstage import ChatUpstage
 from decouple import config
 
-from .ai_tool_call import search_drugs, search_medical_databases
+from .mcp_client import call_tool
 
 from langgraph.graph import StateGraph
 from langgraph.graph import END
@@ -17,8 +17,8 @@ class MedicalState(TypedDict):
     drug_name: str
     disease_name_eng: str
     drug_name_eng: str
-    disease_raw: Optional[dict]
-    drug_raw: Optional[dict]
+    disease_raw: Optional[str]
+    drug_raw: Optional[str]
     result: Optional[dict]
 
 graph_builder = StateGraph(MedicalState)
@@ -75,14 +75,14 @@ def disease_node(state: MedicalState) -> MedicalState:
     disease = state.get("disease_name_eng")
     if not disease:
         return state
-    raw = search_medical_databases.invoke({"query": disease})
+    raw = call_tool("search-medical-databases", {"query": disease})
     return {**state, "disease_raw": raw}
 
 def drug_node(state: MedicalState) -> MedicalState:
     drug = state.get("drug_name_eng")
     if not drug:
         return state
-    raw = search_drugs.invoke({"query": drug})
+    raw = call_tool("search-drugs", {"query": drug})
     return {**state, "drug_raw": raw}
 
 def generate(state: MedicalState):    
